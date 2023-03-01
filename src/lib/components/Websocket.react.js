@@ -22,6 +22,7 @@ export default class Websocket extends Component {
                 if (recv.readyState == 4 && recv.status == 200) {
                   const data = recv.response;
                   console.log(data);
+                  this.props.setProps({message: data});
                 } else {
                   console.log(`Error: ${recv.status}`);
                 }

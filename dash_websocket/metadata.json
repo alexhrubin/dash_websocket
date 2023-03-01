@@ -56,16 +56,6 @@
         "required": false,
         "description": "The websocket endpoint (e.g. wss://echo.websocket.org)."
       },
-      "protocols": {
-        "type": {
-          "name": "arrayOf",
-          "value": {
-            "name": "string"
-          }
-        },
-        "required": false,
-        "description": "Supported websocket protocols (optional)."
-      },
       "id": {
         "type": {
           "name": "string"

@@ -19,9 +19,6 @@ Keyword arguments:
     When messages are received, this property is updated with the
     message content.
 
-- protocols (list of strings; optional):
-    Supported websocket protocols (optional).
-
 - send (dict | string; optional):
     When this property is set, a message is sent with its content.
 
@@ -32,10 +29,10 @@ Keyword arguments:
     _namespace = 'dash_websocket'
     _type = 'Websocket'
     @_explicitize_args
-    def __init__(self, message=Component.UNDEFINED, error=Component.UNDEFINED, send=Component.UNDEFINED, url=Component.UNDEFINED, protocols=Component.UNDEFINED, id=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['id', 'error', 'message', 'protocols', 'send', 'url']
+    def __init__(self, message=Component.UNDEFINED, error=Component.UNDEFINED, send=Component.UNDEFINED, url=Component.UNDEFINED, id=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['id', 'error', 'message', 'send', 'url']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['id', 'error', 'message', 'protocols', 'send', 'url']
+        self.available_properties = ['id', 'error', 'message', 'send', 'url']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()
