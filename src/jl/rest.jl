@@ -1,11 +1,11 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
-export websocket
+export rest
 
 """
-    websocket(;kwargs...)
+    rest(;kwargs...)
 
-A Websocket component.
+A REST component.
 
 Keyword arguments:
 - `id` (String; optional): The ID used to identify this component in Dash callbacks.
@@ -15,9 +15,9 @@ Keyword arguments:
 - `send` (Dict | String; optional): When this property is set, a message is sent with its content.
 - `url` (String; optional): The websocket endpoint (e.g. wss://echo.websocket.org).
 """
-function websocket(; kwargs...)
+function rest(; kwargs...)
         available_props = Symbol[:id, :error, :message, :protocols, :send, :url]
         wild_props = Symbol[]
-        return Component("websocket", "Websocket", "dash_websocket", available_props, wild_props; kwargs...)
+        return Component("rest", "REST", "dash_websocket", available_props, wild_props; kwargs...)
 end
 

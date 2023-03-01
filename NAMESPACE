@@ -1,4 +1,7 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 export(Websocket)
-export(websocket)
+export(___Websocket)
+export(rEST)
+export(Websocket)
+export(httpThing)

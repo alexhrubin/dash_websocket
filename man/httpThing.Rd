@@ -1,17 +1,17 @@
 % Auto-generated: do not edit by hand
-\name{Websocket}
+\name{httpThing}
 
-\alias{Websocket}
+\alias{httpThing}
 
-\title{___Websocket component}
+\title{HttpThing component}
 
 \description{
 
 }
 
 \usage{
-Websocket(id=NULL, error=NULL, message=NULL, protocols=NULL,
-send=NULL, state=NULL, url=NULL)
+httpThing(id=NULL, error=NULL, message=NULL, protocols=NULL,
+send=NULL, url=NULL)
 }
 
 \arguments{
@@ -24,8 +24,6 @@ send=NULL, state=NULL, url=NULL)
 \item{protocols}{List of characters. Supported websocket protocols (optional).}
 
 \item{send}{Named list | character. When this property is set, a message is sent with its content.}
-
-\item{state}{Named list | character. This websocket state (in the readyState prop) and associated information.}
 
 \item{url}{Character. The websocket endpoint (e.g. wss://echo.websocket.org).}
 }

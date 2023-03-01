@@ -3,70 +3,32 @@ import PropTypes from 'prop-types';
 
 export default class Websocket extends Component {
 
-    _init_client() {
-        // Create a new client.
-        let {url} = this.props;
-        const {protocols} = this.props;
-        url = url? url : "ws://" + location.host + location.pathname + "ws";
-        this.client = new WebSocket(url, protocols);
-        // Listen for events.
-        this.client.onopen = (e) => {
-            // TODO: Add more properties here?
-            this.props.setProps({
-                state: {
-                    // Mandatory props.
-                    readyState: WebSocket.OPEN,
-                    isTrusted: e.isTrusted,
-                    timeStamp: e.timeStamp,
-                    // Extra props.
-                    origin: e.origin,
-                }
-            })
-        }
-        this.client.onmessage = (e) => {
-            // TODO: Add more properties here?
-            this.props.setProps({
-                message: e.data
-            })
-        }
-        this.client.onerror = (e) => {
-            // TODO: Implement error handling.
-            this.props.setProps({error: JSON.stringify(e)})
-        }
-        this.client.onclose = (e) => {
-            // TODO: Add more properties here?
-            this.props.setProps({
-                state: {
-                    // Mandatory props.
-                    readyState: WebSocket.CLOSED,
-                    isTrusted: e.isTrusted,
-                    timeStamp: e.timeStamp,
-                    // Extra props.
-                    code: e.code,
-                    reason: e.reason,
-                    wasClean: e.wasClean,
-                }
-            })
-        }
-    }
-
-    componentDidMount() {
-        this._init_client()
-    }
-
     componentDidUpdate(prevProps) {
         const {send} = this.props;
         if (send) {
-            if (this.props.state.readyState === WebSocket.OPEN) {
-                this.client.send(send)
-            }
+            // POST the job definition to the server
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", 'http://' + this.props.url + '/submit');
+            xhr.setRequestHeader("Content-Type", "application/JSON");
+            xhr.send(JSON.stringify(send));
+
+            // Listen for the response to the job
+            const recv = new XMLHttpRequest();
+            recv.open("GET", 'http://' + this.props.url + '/results');
+            recv.setRequestHeader("Content-Type", "application/JSON");
+            recv.responseType = "json";
+            recv.send();
+            recv.onload = () => {
+                if (recv.readyState == 4 && recv.status == 200) {
+                  const data = recv.response;
+                  console.log(data);
+                } else {
+                  console.log(`Error: ${recv.status}`);
+                }
+              };
+
             this.props.setProps({send: null});  // clear `send` so the same message can be sent again
         }
-    }
-
-    componentWillUnmount() {
-        // Clean up (close the connection).
-        this.client.close();
     }
 
     render() {
@@ -75,17 +37,8 @@ export default class Websocket extends Component {
 
 }
 
-Websocket.defaultProps = {
-    state: {readyState: WebSocket.CONNECTING}
-}
 
 Websocket.propTypes = {
-
-    /**
-     * This websocket state (in the readyState prop) and associated information.
-     */
-    state: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-
     /**
      * When messages are received, this property is updated with the message content.
      */
@@ -107,11 +60,6 @@ Websocket.propTypes = {
     url: PropTypes.string,
 
     /**
-     * Supported websocket protocols (optional).
-     */
-    protocols: PropTypes.arrayOf(PropTypes.string),
-
-    /**
      * The ID used to identify this component in Dash callbacks.
      */
     id: PropTypes.string,
@@ -121,5 +69,4 @@ Websocket.propTypes = {
      * to Dash, to make them available for callbacks.
      */
     setProps: PropTypes.func
-
 }

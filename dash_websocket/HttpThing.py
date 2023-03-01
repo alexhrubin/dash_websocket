@@ -3,8 +3,8 @@
 from dash.development.base_component import Component, _explicitize_args
 
 
-class Websocket(Component):
-    """A Websocket component.
+class HttpThing(Component):
+    """A HttpThing component.
 
 
 Keyword arguments:
@@ -30,7 +30,7 @@ Keyword arguments:
     _children_props = []
     _base_nodes = ['children']
     _namespace = 'dash_websocket'
-    _type = 'Websocket'
+    _type = 'HttpThing'
     @_explicitize_args
     def __init__(self, message=Component.UNDEFINED, error=Component.UNDEFINED, send=Component.UNDEFINED, url=Component.UNDEFINED, protocols=Component.UNDEFINED, id=Component.UNDEFINED, **kwargs):
         self._prop_names = ['id', 'error', 'message', 'protocols', 'send', 'url']
@@ -42,4 +42,4 @@ Keyword arguments:
         _locals.update(kwargs)  # For wildcard attrs and excess named props
         args = {k: _locals[k] for k in _explicit_args}
 
-        super(Websocket, self).__init__(**args)
+        super(HttpThing, self).__init__(**args)

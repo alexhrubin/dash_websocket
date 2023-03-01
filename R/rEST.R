@@ -1,17 +1,17 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 #' @export
-Websocket <- function(id=NULL, error=NULL, message=NULL, protocols=NULL, send=NULL, state=NULL, url=NULL) {
+rEST <- function(id=NULL, error=NULL, message=NULL, protocols=NULL, send=NULL, url=NULL) {
     
-    props <- list(id=id, error=error, message=message, protocols=protocols, send=send, state=state, url=url)
+    props <- list(id=id, error=error, message=message, protocols=protocols, send=send, url=url)
     if (length(props) > 0) {
         props <- props[!vapply(props, is.null, logical(1))]
     }
     component <- list(
         props = props,
-        type = '___Websocket',
+        type = 'REST',
         namespace = 'dash_websocket',
-        propNames = c('id', 'error', 'message', 'protocols', 'send', 'state', 'url'),
+        propNames = c('id', 'error', 'message', 'protocols', 'send', 'url'),
         package = 'dashWebsocket'
         )
 
