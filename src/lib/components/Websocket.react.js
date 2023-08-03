@@ -22,6 +22,26 @@ function numpyArrayFromProto(numericArray) {
 }
 
 
+function reshapeTo2D(array, rows, cols) {
+  let result = [];
+  for (let i = 0; i < rows; i++) {
+      result.push(array.slice(i * cols, (i + 1) * cols));
+  }
+  return result;
+}
+
+
+function reshape(array, shape) {
+  if (shape.length === 1) {
+      return array;
+  } else if (shape.length === 2) {
+      return reshapeTo2D(array, shape[0], shape[1]);
+  }
+  // Add more dimensions as needed
+}
+
+
+
 export default class Websocket extends Component {
 
     _init_client() {
@@ -54,7 +74,7 @@ export default class Websocket extends Component {
             const resultObject = Object.fromEntries(
               Array.from(dataMap.entries()).map(([keyString, numericArray]) => {
                   const arrayObject = numpyArrayFromProto(numericArray);
-                  return [keyString, arrayObject.data];
+                  return [keyString, reshape(arrayObject.data, arrayObject.shape)];
               })
             );
 
@@ -90,8 +110,6 @@ export default class Websocket extends Component {
     componentDidUpdate(prevProps) {
         const {send} = this.props;
         if (send) {
-            
-
             if (this.props.state.readyState === WebSocket.OPEN) {
                 this.client.send(send)
             }
