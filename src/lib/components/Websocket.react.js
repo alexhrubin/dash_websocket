@@ -1,6 +1,6 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
-const { WrapperMessage, DataType } = require('../rlabcontrol_pb.js');
+const { WrapperMessage, DataType, ExperimentTask, Value, SettingValue } = require('../rlabcontrol_pb.js');
 const ndarray = require('ndarray');
 
 
@@ -39,6 +39,50 @@ function reshape(array, shape) {
   }
   // Add more dimensions as needed
 }
+
+function encodeExperimentTask(data) {
+  function createValueObj(value) {
+      var val = new Value();
+      if (typeof value === 'string') {
+          val.setStringValue(value);
+      } else if (typeof value === 'number') {
+          if (Number.isInteger(value)) {
+              val.setIntValue(value);
+          } else {
+              val.setFloatValue(value);
+          }
+      } else if (typeof value === 'boolean') {
+          val.setBoolValue(value);
+      }
+      return val;
+  }
+
+  // Construct the SettingValue message
+  const settingsMap = {};
+  for (let key in data.settings) {
+      const settingValue = new SettingValue();
+      const valueMap = settingValue.getValuesMap();
+      for (let subKey in data.settings[key]) {
+          valueMap.set(subKey, createValueObj(data.settings[key][subKey]));
+      }
+      settingsMap[key] = settingValue;
+  }
+
+  // Construct the ExperimentTask message
+  const experimentTask = new ExperimentTask();
+  const taskSettingsMap = experimentTask.getSettingsMap();
+  for (let key in settingsMap) {
+      taskSettingsMap.set(key, settingsMap[key]);
+  }
+  experimentTask.setMeasureList(data.measure);  // Assuming `measure` is an array
+
+  // Wrap in WrapperMessage
+  const wrapperMessage = new WrapperMessage();
+  wrapperMessage.setTask(experimentTask);
+
+  return wrapperMessage;
+}
+
 
 
 
@@ -110,8 +154,9 @@ export default class Websocket extends Component {
     componentDidUpdate(prevProps) {
         const {send} = this.props;
         if (send) {
-            if (this.props.state.readyState === WebSocket.OPEN) {
-                this.client.send(send)
+          if (this.props.state.readyState === WebSocket.OPEN) {
+              const message = encodeExperimentTask(send);
+              this.client.send(message.serializeBinary());
             }
             this.props.setProps({send: null});  // clear `send` so the same message can be sent again
         }

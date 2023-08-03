@@ -25,7 +25,21 @@ def display_output(n_clicks):
     if n_clicks == 0:
         raise PreventUpdate
     print("SENDING")
-    return "message!!!"
+
+    data = {
+        'settings': {
+            'setting1': {
+                'value1': "test",
+                'value2': 123
+            },
+            'setting2': {
+                'value1': 0.456,
+                'value2': True
+            }
+        },
+        'measure': ["measure1", "measure2"]
+    }
+    return data
 
 
 @callback(
@@ -34,7 +48,7 @@ def display_output(n_clicks):
 )
 def show_response(message):
     if message is not None:
-        print(message)
+        # print(message)
         return f"recvd: {message}"
 
 
