@@ -1,5 +1,26 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
+const { WrapperMessage, DataType } = require('../rlabcontrol_pb.js');
+const ndarray = require('ndarray');
+
+
+function numpyArrayFromProto(numericArray) {
+    const dtypeMap = {
+        [DataType.FLOAT32]: Float32Array,
+        [DataType.FLOAT64]: Float64Array,
+        [DataType.INT32]: Int32Array,
+        [DataType.INT64]: BigInt64Array,
+        // Add more mappings as necessary
+    };
+
+    const bytes = numericArray.getValues();
+    const buffer = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
+    const typedArray = new dtypeMap[numericArray.getDtype()](buffer);
+    const normalArray = Array.from(typedArray).map(Number);
+
+    return ndarray(normalArray, numericArray.getShapeList());
+}
+
 
 export default class Websocket extends Component {
 
@@ -23,10 +44,22 @@ export default class Websocket extends Component {
                 }
             })
         }
+
+        this.client.binaryType = "arraybuffer";  // This is needed for compatibility with the Protobuf format
         this.client.onmessage = (e) => {
-            // TODO: Add more properties here?
+            let decodedMessage = WrapperMessage.deserializeBinary(e.data);
+            let meas_result = decodedMessage.getResult();
+            let dataMap = meas_result.getDataMap();
+
+            const resultObject = Object.fromEntries(
+              Array.from(dataMap.entries()).map(([keyString, numericArray]) => {
+                  const arrayObject = numpyArrayFromProto(numericArray);
+                  return [keyString, arrayObject.data];
+              })
+            );
+
             this.props.setProps({
-                message: e.data
+                message: resultObject
             })
         }
         this.client.onerror = (e) => {
@@ -57,6 +90,8 @@ export default class Websocket extends Component {
     componentDidUpdate(prevProps) {
         const {send} = this.props;
         if (send) {
+            
+
             if (this.props.state.readyState === WebSocket.OPEN) {
                 this.client.send(send)
             }
