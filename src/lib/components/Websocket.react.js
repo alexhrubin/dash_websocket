@@ -16,6 +16,7 @@ export default class CustomHTTPComponent extends Component {
         body: JSON.stringify(message),
       });
       const data = await response.json();
+      console.log(data)
       if (data) {
         this.props.setProps({ message: data }); // Update parent with received message
       }
