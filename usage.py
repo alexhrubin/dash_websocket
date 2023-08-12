@@ -7,15 +7,25 @@ app = Dash(__name__)
 
 app.layout = html.Div([
     Websocket(
-        id='ws',
-        url="ws://127.0.0.1:5000/test",
+        id="ws",
+        url="http://localhost:5001/test",
     ),
     dcc.Input(id="msg"),
     html.Div(id='output'),
     html.Button("send", id="send", n_clicks=0),
     html.Div(id="resp"),
+    html.Button("clickme", id="clickme", n_clicks=0),
+    html.Div(id="clickme-output"),
 ])
 
+@callback(
+    Output('clickme-output', 'children'),
+    Input('clickme', 'n_clicks'),
+)
+def display_output(n_clicks):
+    if n_clicks == 0:
+        raise PreventUpdate
+    return f'Clicked {n_clicks} times'
 
 @callback(
     Output('ws', 'send'),

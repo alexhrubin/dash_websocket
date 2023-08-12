@@ -9,41 +9,31 @@ class Websocket(Component):
 
 Keyword arguments:
 
-- id (string; optional):
-    The ID used to identify this component in Dash callbacks.
+- id (string; optional)
 
-- error (dict | string; optional):
-    This property is set with the content of the onerror event.
+- message (dict | string; optional)
 
-- message (dict | string; optional):
-    When messages are received, this property is updated with the
-    message content.
+- send (dict | string; optional)
 
-- protocols (list of strings; optional):
-    Supported websocket protocols (optional).
-
-- send (dict | string; optional):
-    When this property is set, a message is sent with its content.
-
-- state (dict | string; default {readyState: WebSocket.CONNECTING}):
-    This websocket state (in the readyState prop) and associated
-    information.
-
-- url (string; optional):
-    The websocket endpoint (e.g. wss://echo.websocket.org)."""
+- url (string; required)"""
     _children_props = []
     _base_nodes = ['children']
     _namespace = 'dash_websocket'
     _type = 'Websocket'
     @_explicitize_args
-    def __init__(self, state=Component.UNDEFINED, message=Component.UNDEFINED, error=Component.UNDEFINED, send=Component.UNDEFINED, url=Component.UNDEFINED, protocols=Component.UNDEFINED, id=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['id', 'error', 'message', 'protocols', 'send', 'state', 'url']
+    def __init__(self, id=Component.UNDEFINED, url=Component.REQUIRED, send=Component.UNDEFINED, message=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['id', 'message', 'send', 'url']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['id', 'error', 'message', 'protocols', 'send', 'state', 'url']
+        self.available_properties = ['id', 'message', 'send', 'url']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()
         _locals.update(kwargs)  # For wildcard attrs and excess named props
         args = {k: _locals[k] for k in _explicit_args}
+
+        for k in ['url']:
+            if k not in args:
+                raise TypeError(
+                    'Required argument `' + k + '` was not specified.')
 
         super(Websocket, self).__init__(**args)
