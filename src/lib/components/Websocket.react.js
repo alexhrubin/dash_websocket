@@ -35,6 +35,7 @@ export default class Websocket extends Component {
         }
         this.client.onclose = (e) => {
             // TODO: Add more properties here?
+            console.log("closing")
             this.props.setProps({
                 state: {
                     // Mandatory props.
