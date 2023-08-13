@@ -36,18 +36,18 @@ export default class Websocket extends Component {
         this.client.onclose = (e) => {
             // TODO: Add more properties here?
             console.log("closing")
-            this.props.setProps({
-                state: {
-                    // Mandatory props.
-                    readyState: WebSocket.CLOSED,
-                    isTrusted: e.isTrusted,
-                    timeStamp: e.timeStamp,
-                    // Extra props.
-                    code: e.code,
-                    reason: e.reason,
-                    wasClean: e.wasClean,
-                }
-            })
+            // this.props.setProps({
+            //     state: {
+            //         // Mandatory props.
+            //         readyState: WebSocket.CLOSED,
+            //         isTrusted: e.isTrusted,
+            //         timeStamp: e.timeStamp,
+            //         // Extra props.
+            //         code: e.code,
+            //         reason: e.reason,
+            //         wasClean: e.wasClean,
+            //     }
+            // })
         }
     }
 
