@@ -35,18 +35,20 @@ export default class Websocket extends Component {
         }
         this.client.onclose = (e) => {
             // TODO: Add more properties here?
-            this.props.setProps({
-                state: {
-                    // Mandatory props.
-                    readyState: WebSocket.CLOSED,
-                    isTrusted: e.isTrusted,
-                    timeStamp: e.timeStamp,
-                    // Extra props.
-                    code: e.code,
-                    reason: e.reason,
-                    wasClean: e.wasClean,
-                }
-            })
+            // This block below causes an error with Dash when the socket closes, I'm not sure why
+            // but I don't think it's necessary to have this block anyway (?)
+            // this.props.setProps({
+            //     state: {
+            //         // Mandatory props.
+            //         readyState: WebSocket.CLOSED,
+            //         isTrusted: e.isTrusted,
+            //         timeStamp: e.timeStamp,
+            //         // Extra props.
+            //         code: e.code,
+            //         reason: e.reason,
+            //         wasClean: e.wasClean,
+            //     }
+            // })
         }
     }
 
